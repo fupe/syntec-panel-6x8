@@ -164,6 +164,7 @@ class HandlerClass:
         self.data['nokey'] = hal_glib.GPin(self.halcomp.newpin('nokey', hal.HAL_BIT, hal.HAL_IN))
         self.data['jog_scale'] = hal_glib.GPin(self.halcomp.newpin('jog_scale', hal.HAL_FLOAT, hal.HAL_OUT))
         self.data['jog_angular_scale'] = hal_glib.GPin(self.halcomp.newpin('jog_angular_scale', hal.HAL_FLOAT, hal.HAL_OUT))
+        self.data['shutdown'] = hal_glib.GPin(self.halcomp.newpin('shutdown', hal.HAL_BIT, hal.HAL_IN))
         self.halcomp['jog_scale']=self.x1_mpg_scale
         self.halcomp['jog_angular_scale']=self.x1_mpg_angular_scale
 
@@ -172,11 +173,19 @@ class HandlerClass:
     def connect_signals(self,handlers):
         self.gscreen.connect_signals(handlers)
         self.data['key_panel'].connect('value-changed', self.key_panel_func)
+        self.data['shutdown'].connect('value-changed', self.shutdown)
         self.data['nokey'].connect('value-changed', self.nokey_func)
     
     def initialize_pins(self):
         self.gscreen.initialize_pins()
         self.init_my_pins()
+
+    def shutdown (self,status):
+        if self.halcomp['shutdown'] :
+            os.system("./shutdown.sh")
+            time.sleep(2)
+            print "shutdown--------:", status
+            gtk.main_quit()
 
 		
     def home_all_func (self,key):

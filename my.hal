@@ -6,7 +6,7 @@ addf hm2_7i76e.0.read servo-thread
 addf hm2_7i76e.0.write servo-thread
 setp hm2_7i76e.0.watchdog.timeout_ns 5000000
 setp hm2_7i76e.0.dpll.01.timer-us -50
-loadrt matrix_kb_led config=8x8s
+loadrt matrix_kb_led config=6x8s
 addf matrix_kb_led.0 servo-thread
 net r0 matrix_kb_led.0.row-00-out hm2_7i76e.0.7i73.0.1.output-10
 net r1 matrix_kb_led.0.row-01-out hm2_7i76e.0.7i73.0.1.output-11
