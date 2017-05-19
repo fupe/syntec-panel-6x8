@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gladevcp 0.0 -->
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="window1">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="JogWheel" id="jogwheel1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="size">400</property>
+      </object>
+    </child>
+  </object>
+</interface>
