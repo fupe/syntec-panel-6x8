@@ -6,28 +6,28 @@ addf hm2_7i76e.0.read servo-thread
 addf hm2_7i76e.0.write servo-thread
 setp hm2_7i76e.0.watchdog.timeout_ns 5000000
 setp hm2_7i76e.0.dpll.01.timer-us -50
-loadrt matrix_kb config=8x8s
-addf matrix_kb.0 servo-thread
-net r0 matrix_kb.0.row-00-out hm2_7i76e.0.7i73.0.1.output-10
-net r1 matrix_kb.0.row-01-out hm2_7i76e.0.7i73.0.1.output-11
-net r2 matrix_kb.0.row-02-out hm2_7i76e.0.7i73.0.1.output-12
-net r3 matrix_kb.0.row-03-out hm2_7i76e.0.7i73.0.1.output-13
-net r4 matrix_kb.0.row-04-out hm2_7i76e.0.7i73.0.1.output-14
-net r5 matrix_kb.0.row-05-out hm2_7i76e.0.7i73.0.1.output-15
+loadrt matrix_kb_led config=8x8s
+addf matrix_kb_led.0 servo-thread
+net r0 matrix_kb_led.0.row-00-out hm2_7i76e.0.7i73.0.1.output-10
+net r1 matrix_kb_led.0.row-01-out hm2_7i76e.0.7i73.0.1.output-11
+net r2 matrix_kb_led.0.row-02-out hm2_7i76e.0.7i73.0.1.output-12
+net r3 matrix_kb_led.0.row-03-out hm2_7i76e.0.7i73.0.1.output-13
+net r4 matrix_kb_led.0.row-04-out hm2_7i76e.0.7i73.0.1.output-14
+net r5 matrix_kb_led.0.row-05-out hm2_7i76e.0.7i73.0.1.output-15
 
-net co matrix_kb.0.col-00-in hm2_7i76e.0.7i73.0.1.input-16
-net c1 matrix_kb.0.col-01-in hm2_7i76e.0.7i73.0.1.input-17
-net c2 matrix_kb.0.col-02-in hm2_7i76e.0.7i73.0.1.input-18
-net c3 matrix_kb.0.col-03-in hm2_7i76e.0.7i73.0.1.input-19
-net c4 matrix_kb.0.col-04-in hm2_7i76e.0.7i73.0.1.input-20
-net c5 matrix_kb.0.col-05-in hm2_7i76e.0.7i73.0.1.input-21
+net co matrix_kb_led.0.col-00-in hm2_7i76e.0.7i73.0.1.input-16
+net c1 matrix_kb_led.0.col-01-in hm2_7i76e.0.7i73.0.1.input-17
+net c2 matrix_kb_led.0.col-02-in hm2_7i76e.0.7i73.0.1.input-18
+net c3 matrix_kb_led.0.col-03-in hm2_7i76e.0.7i73.0.1.input-19
+net c4 matrix_kb_led.0.col-04-in hm2_7i76e.0.7i73.0.1.input-20
+net c5 matrix_kb_led.0.col-05-in hm2_7i76e.0.7i73.0.1.input-21
 
 
-net led0 matrix_kb.0.col-led00-out hm2_7i76e.0.7i73.0.1.output-02
-net led1 matrix_kb.0.col-led01-out hm2_7i76e.0.7i73.0.1.output-03
-net led2 matrix_kb.0.col-led02-out hm2_7i76e.0.7i73.0.1.output-04
-net led3 matrix_kb.0.col-led03-out hm2_7i76e.0.7i73.0.1.output-05
-net led4 matrix_kb.0.col-led04-out hm2_7i76e.0.7i73.0.1.output-06
+net led0 matrix_kb_led.0.col-led00-out hm2_7i76e.0.7i73.0.1.output-02
+net led1 matrix_kb_led.0.col-led01-out hm2_7i76e.0.7i73.0.1.output-03
+net led2 matrix_kb_led.0.col-led02-out hm2_7i76e.0.7i73.0.1.output-04
+net led3 matrix_kb_led.0.col-led03-out hm2_7i76e.0.7i73.0.1.output-05
+net led4 matrix_kb_led.0.col-led04-out hm2_7i76e.0.7i73.0.1.output-06
 
 loadusr halshow my.halshow
 

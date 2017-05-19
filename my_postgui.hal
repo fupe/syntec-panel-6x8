@@ -1,6 +1,6 @@
-#net bbbbb matrix_kb.0.key.r3c1 my_gscreen.mdi_mode
-net keycode  matrix_kb.0.keycode my_gscreen.key_panel
-net ledkey matrix_kb.0.ledcode my_gscreen.key_led
+#net bbbbb matrix_kb_led.0.key.r3c1 my_gscreen.mdi_mode
+net keycode  matrix_kb_led.0.keycode my_gscreen.key_panel
+net ledkey matrix_kb_led.0.ledcode my_gscreen.key_led
 loadusr -Wn gladevcp gladevcp -c gladevcp ./wheel.glade
 net wheel gladevcp.jogwheel1  axis.x.jog-counts  axis.y.jog-counts  axis.z.jog-counts axis.a.jog-counts
 net wheel my_gscreen.wheel
@@ -17,4 +17,4 @@ setp axis.a.jog-vel-mode 1
 
 #loadusr halscope
 net Apos joint.3.motor-pos-cmd => joint.3.motor-pos-fb
-net nokey matrix_kb.0.nokey my_gscreen.nokey
+net nokey matrix_kb_led.0.nokey my_gscreen.nokey
