@@ -1,4 +1,4 @@
-# syntec-panel-6x8
+# syntec-panel-6x8 with MESA 7i76E and 7i73
 
 
 ## Instalation matrix_kb_led

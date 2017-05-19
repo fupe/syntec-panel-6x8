@@ -54,12 +54,12 @@ class HandlerClass:
         
         self.set_jog_speed=0
         self.function_list = {
-			'0': 'mpg','1': 'home_all','2':'inc_jog','3':'spindle_minus','4':'spindle_reset','5':'spindle_plus',
-            '8': 'jog','9': 'mdi_mode', '10':'auto_mode','11':'spindle_cw','12':'spindle_stop','13':'spindle_ccw',
-			'16':'x1', '17':'x10','18':'x100','19':'feed_minus','20':'feed_reset','21':'feed_plus',
-			'24':'z_plus','25':'y_plus','26':'a_plus',
-			'32':'x_minus','33':'rapid','34':'x_plus','35':'light','36':'toolchange',
-			'40':'z_minus','41':'y_minus','42':'a_minus'
+            '0': 'mpg','1': 'home_all','2':'inc_jog','3':'spindle_minus','4':'spindle_reset','5':'spindle_plus',
+            '8': 'jog','9': 'mdi_mode', '10':'auto_mode','11':'spindle_cw','12':'spindle_stop','13':'spindle_ccw','15':'nic',
+            '16':'x1', '17':'x10','18':'x100','19':'feed_minus','20':'feed_reset','21':'feed_plus',
+            '24':'z_plus','25':'y_plus','26':'a_plus',
+            '32':'x_minus','33':'rapid','34':'x_plus','35':'light','36':'toolchange',
+            '40':'z_minus','41':'y_minus','42':'a_minus'
 			
             }
         self.update_led_list = (
@@ -104,6 +104,7 @@ class HandlerClass:
                 self.halcomp['light'] = True
 				
     def toolchange_func (self,key):
+
         print "--------toolchange-----------"
         s.poll() # get current valuess.poll()		
         print "max_position_limit" , s.axis[0]['max_position_limit']
@@ -120,6 +121,7 @@ class HandlerClass:
 		
     def light_update (self):
         return self.halcomp['light'] == True
+
     def periodic (self):
         self.gscreen.update_position()
         if self.set_jog_speed==1:
@@ -552,12 +554,15 @@ class HandlerClass:
     def key_panel_func (self,widget):
         keycode = self.halcomp['key_panel']  & ~(keydown_panel | keyup_panel)
         print "-----key code--------", self.halcomp['key_panel']
+        key = 100
         if ((self.halcomp['key_panel'] & keydown_panel) == keydown_panel) :
             key=KEY_DOWN
             print "key down"
         elif ((self.halcomp['key_panel'] & keydown_panel) == keyup_panel) :
             key=KEY_UP
             print "key up"
+        
+            
 
         r = keycode >> rowshift_panel
         c = keycode & ~(0xFFFFFFFF << rowshift_panel)
@@ -565,11 +570,10 @@ class HandlerClass:
             return
         print "row" ,r , "colu" , c
         cudlik=r * 8 + c
-        print "poradove cislo cusliku" ,cudlik
-        print "volam funkci ", self.function_list[str(cudlik)] , "_func(", key,")"
-        eval("self."+self.function_list[str(cudlik)]+"_func("+str(key)+")")
+        print "poradove cislo cudliku" ,cudlik
         try:
-            pass
+            print "volam funkci ", self.function_list[str(cudlik)] , "_func(", key,")"
+            eval("self."+self.function_list[str(cudlik)]+"_func("+str(key)+")")
             """eval("self."+self.function_list[str(cudlik)]+"_func()")"""
         except:
             print "takovej cudlik jeste neni definovan"
