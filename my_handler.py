@@ -32,7 +32,6 @@ class HandlerClass:
         global keyup_panel
         global rowshift_panel
         self.prefs = preferences.preferences()
-        self.prefs.putpref('moje promena', '125', str,"RASCODE")
         self.keylookup = keybindings.Keylookup()
         inifile = linuxcnc.ini(os.getenv("INI_FILE_NAME"))
         self.step_feed_override = inifile.find("SYNTEC", "STEP_FEED_OVERRIDE") or 0.1  #nastavi velikost kroku pro plus minus feed override
@@ -47,8 +46,11 @@ class HandlerClass:
         self.x100_mpg_angular_scale = inifile.find("SYNTEC", "MPG_ANGULAR_SCALE_X100") or 50
         self.jog_mode = 0   # 0=no jog, 1= jog, 2=inc_jog, 3=mpg
         self.rapid_speed_select = 0
-        self.rapid_speed_low = int(float(inifile.find("SYNTEC", "JOG_SPEED_LOW") or 1))
+        self.rapid_speed_low = self.prefs.getpref('JOG_SPEED_LOW', '12', int ,"PANEL")
+        print "----jog speed from .gscreen:" , self.prefs.getpref('JOG_SPEED_LOW', '12', str,"PANEL")
+        print "----jog speed from ini" , self.rapid_speed_low
         self.rapid_speed_hi = int(float(inifile.find("SYNTEC", "JOG_SPEED_HI") or 5))
+        #self.rapid_speed_hi = self.prefs.getpref('JOG_SPEED_HI', '25', str,"PANEL")
         self.rapid_angular_speed_low = int(float(inifile.find("SYNTEC", "JOG_ANGULAR_SPEED_LOW") or 122))
         self.rapid_angular_speed_hi = int(float(inifile.find("SYNTEC", "JOG_ANGULAR_SPEED_HI") or 169))
         
@@ -73,10 +75,11 @@ class HandlerClass:
         self.gscreen.initialize_widgets()
         self.gscreen.init_show_windows()
         self.gscreen.keylookup.add_binding('d', self.prefs.getpref ('Key_dddd', 'Xddd', str,"KEYCODES"))
-        self.gscreen.keylookup.add_binding('g', self.prefs.getpref('Key_dddd', 'HAETER', str,"KEYCODES"))
         self.gscreen.keylookup.add_conversion('s','TEST','on_keycall_HALMETER')
         print "inicialiyace widgetu"
         print "----------self.prefs.getpref-------", self.prefs.getpref('Key_dddd', 'HALMETER', str,"KEYCODES")
+        self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)
+        self.gscreen.update_jog_rate_label()
 
 
     def on_keycall_HALMETER(self,state,SHIFT,CNTRL,ALT):
@@ -150,7 +153,7 @@ class HandlerClass:
             else:
                 self.rapid_speed_hi = self.rapid_speed_current + self.halcomp['wheel'] - self.current_wheel
                 self.gscreen.set_jog_rate(absolute = self.rapid_speed_hi)
-        self.gscreen.update_jog_rate_label()
+        
 
 
 		
@@ -242,6 +245,10 @@ class HandlerClass:
                 self.rapid_speed_select = 1
                 print "nastavuju rychlou"
         else:
+            print "-----------------uvolneno-------"
+            self.gscreen.update_jog_rate_label()
+            self.prefs.putpref('JOG_SPEED_LOW', self.rapid_speed_low , int ,"PANEL")
+
             self.set_jog_speed=0
             self.gscreen.data.angular_jog_adjustment_flag = False
 			
