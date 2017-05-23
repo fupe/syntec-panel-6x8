@@ -34,25 +34,28 @@ class HandlerClass:
         self.prefs = preferences.preferences()
         self.keylookup = keybindings.Keylookup()
         inifile = linuxcnc.ini(os.getenv("INI_FILE_NAME"))
-        self.step_feed_override = inifile.find("SYNTEC", "STEP_FEED_OVERRIDE") or 0.1  #nastavi velikost kroku pro plus minus feed override
-        self.max_feed_override = inifile.find("DISPLAY", "MAX_FEED_OVERRIDE") or 1.5
-        self.max_spindle_override = inifile.find("DISPLAY", "MAX_SPINDLE_OVERRIDE") or 1.5   #pouzije hodnotu max spindle override
-        self.step_spindle_override = inifile.find("SYNTEC", "STEP_SPINDLE_OVERRIDE") or 0.1  #nastavi velikost kroku pro plus minus spin override
-        self.x1_mpg_scale = inifile.find("SYNTEC", "MPG_SCALE_X1") or 1
-        self.x10_mpg_scale = inifile.find("SYNTEC", "MPG_SCALE_X10") or 2
-        self.x100_mpg_scale = inifile.find("SYNTEC", "MPG_SCALE_X100") or 5
-        self.x1_mpg_angular_scale = inifile.find("SYNTEC", "MPG_ANGULAR_SCALE_X1") or 10
-        self.x10_mpg_angular_scale = inifile.find("SYNTEC", "MPG_ANGULAR_SCALE_X10") or 20
-        self.x100_mpg_angular_scale = inifile.find("SYNTEC", "MPG_ANGULAR_SCALE_X100") or 50
+
+
+
+        self.step_feed_override = self.prefs.getpref('STEP_FEED_OVERRIDE',0.2, float  ,"PANEL")
+        self.max_feed_override = self.prefs.getpref('MAX_FEED_OVERRIDE',1.5, float  ,"PANEL")
+
+        self.step_spindle_override = self.prefs.getpref('STEP_SPINDLE_OVERRIDE',0.2,float,"PANEL")
+        self.max_spindle_override = self.prefs.getpref('MAX_SPINDLE_OVERRIDE',1.5,float,"PANEL")
+
+        self.x1_mpg_scale = self.prefs.getpref('MPG_SCALE_X1',1, int ,"PANEL")
+        self.x10_mpg_scale = self.prefs.getpref('MPG_SCALE_X10',2, int ,"PANEL")
+        self.x100_mpg_scale = self.prefs.getpref('MPG_SCALE_X100',5, int ,"PANEL")
+        self.x1_mpg_angular_scale = self.prefs.getpref('MPG_ANGULAR_SCALE_X1',1, int ,"PANEL")
+        self.x10_mpg_angular_scale = self.prefs.getpref('MPG_ANGULAR_SCALE_X10',10, int ,"PANEL")
+        self.x100_mpg_angular_scale = self.prefs.getpref('MPG_ANGULAR_SCALE_X100',100, int ,"PANEL")
         self.jog_mode = 0   # 0=no jog, 1= jog, 2=inc_jog, 3=mpg
         self.rapid_speed_select = 0
         self.rapid_speed_low = self.prefs.getpref('JOG_SPEED_LOW', '12', int ,"PANEL")
-        print "----jog speed from .gscreen:" , self.prefs.getpref('JOG_SPEED_LOW', '12', str,"PANEL")
-        print "----jog speed from ini" , self.rapid_speed_low
-        self.rapid_speed_hi = int(float(inifile.find("SYNTEC", "JOG_SPEED_HI") or 5))
-        #self.rapid_speed_hi = self.prefs.getpref('JOG_SPEED_HI', '25', str,"PANEL")
-        self.rapid_angular_speed_low = int(float(inifile.find("SYNTEC", "JOG_ANGULAR_SPEED_LOW") or 122))
-        self.rapid_angular_speed_hi = int(float(inifile.find("SYNTEC", "JOG_ANGULAR_SPEED_HI") or 169))
+        self.rapid_speed_hi = self.prefs.getpref('JOG_SPEED_HI', '120', int ,"PANEL")
+        self.rapid_angular_speed_low = self.prefs.getpref('JOG_ANGULAR_SPEED_LOW', '120', int ,"PANEL")
+        self.rapid_angular_speed_hi = self.prefs.getpref('JOG_ANGULAR_SPEED_HI', '220', int ,"PANEL")
+
         
         self.set_jog_speed=0
         self.function_list = {
