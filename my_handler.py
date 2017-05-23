@@ -20,6 +20,10 @@ except linuxcnc.error, detail:
     print "error", detail
     sys.exit(1)
 
+def get_handlers(halcomp,builder,useropts,gscreen):
+     return [HandlerClass(halcomp,builder,useropts,gscreen)]
+
+
 class HandlerClass:
     def __init__(self,halcomp,builder,useropts,gscreen):
 
@@ -32,9 +36,7 @@ class HandlerClass:
         global keyup_panel
         global rowshift_panel
         self.prefs = preferences.preferences()
-        self.keylookup = keybindings.Keylookup()
         inifile = linuxcnc.ini(os.getenv("INI_FILE_NAME"))
-
 
 
         self.step_feed_override = self.prefs.getpref('STEP_FEED_OVERRIDE',0.2, float  ,"PANEL")
@@ -70,34 +72,14 @@ class HandlerClass:
         self.update_led_list = (
 		    '0','1','2','3','4','5','8','9','10','11','12','13','16','17','18','19','20','21','24','25','26','32','33','34','35','40','41','42')
 
-        '''def initialize_preferences (self):
-            self.gscreen.initialize_preferences ()'''
- 
  
     def initialize_widgets(self):
         self.gscreen.initialize_widgets()
         self.gscreen.init_show_windows()
-        self.gscreen.keylookup.add_binding('d', self.prefs.getpref ('Key_dddd', 'Xddd', str,"KEYCODES"))
-        self.gscreen.keylookup.add_conversion('s','TEST','on_keycall_HALMETER')
-        print "inicialiyace widgetu"
-        print "----------self.prefs.getpref-------", self.prefs.getpref('Key_dddd', 'HALMETER', str,"KEYCODES")
+        print "my inicializace widgetu"
         self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)
         self.gscreen.update_jog_rate_label()
 
-
-    def on_keycall_HALMETER(self,state,SHIFT,CNTRL,ALT):
-        print "halmetr zavolan" 
-        if state:
-            self.gscreen.on_halmeter()
-        return True
- 
- 
- 
- 
- 
- 
- 
- 
  
  
  
@@ -190,7 +172,7 @@ class HandlerClass:
         if self.halcomp['shutdown'] :
             os.system("./shutdown.sh")
             time.sleep(2)
-            print "shutdown--------:", status
+            print "--------shutdown--------:", status
             gtk.main_quit()
 
 		
@@ -251,6 +233,9 @@ class HandlerClass:
             print "-----------------uvolneno-------"
             self.gscreen.update_jog_rate_label()
             self.prefs.putpref('JOG_SPEED_LOW', self.rapid_speed_low , int ,"PANEL")
+            self.prefs.putpref('JOG_SPEED_HI', self.rapid_speed_low , int ,"PANEL")
+            self.prefs.putpref('JOG_ANGULAR_SPEED_LOW', self.rapid_angular_speed_low , int ,"PANEL")
+            self.prefs.putpref('JOG_ANGULAR_SPEED_HI', self.rapid_angular_speed_hi , int ,"PANEL")
 
             self.set_jog_speed=0
             self.gscreen.data.angular_jog_adjustment_flag = False
@@ -714,6 +699,3 @@ class HandlerClass:
         return s.spindle_direction==-1
         
 
-
-def get_handlers(halcomp,builder,useropts,gscreen):
-     return [HandlerClass(halcomp,builder,useropts,gscreen)]
