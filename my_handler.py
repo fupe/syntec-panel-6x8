@@ -77,8 +77,14 @@ class HandlerClass:
         self.gscreen.initialize_widgets()
         self.gscreen.init_show_windows()
         print "my inicializace widgetu"
-        self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)
-        self.gscreen.update_jog_rate_label()
+        
+        self.data.angular_jog_rate = self.rapid_angular_speed_low
+        self.data.jog_rate = self.rapid_speed_low
+        self.rapid_speed_select = 0
+        self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)	
+        self.gscreen.data.angular_jog_adjustment_flag = True
+        self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_low)
+        self.gscreen.data.angular_jog_adjustment_flag = False
 
  
  
@@ -199,47 +205,61 @@ class HandlerClass:
                     self.set_jog_speed=1
                     self.current_wheel = self.halcomp['wheel']
                     if self.rapid_speed_select == 0:
-                        self.rapid_speed_current = self.rapid_speed_low
+                        if self.gscreen.data.angular_jog_adjustment_flag:
+                            self.rapid_speed_current = self.rapid_angular_speed_low
+                        else:
+                            self.rapid_speed_current = self.rapid_speed_low
                     else:
-                        self.rapid_speed_current = self.rapid_speed_hi
+                        if self.gscreen.data.angular_jog_adjustment_flag:
+                            self.rapid_speed_current = self.rapid_angular_speed_hi
+                        else:
+                            self.rapid_speed_current = self.rapid_speed_hi
                     for i in self.data.axis_list:
                         self.widgets["axis_%s"%i].set_active(False)
                     print "----------current speed je ", self.rapid_speed_current
                     break
 					
             print "----------adjust flag + rotacni osa ",self.gscreen.data.angular_jog_adjustment_flag , self.data.rotary_joints
+            print " self.rapid_speed_select and not self.set_jog_speed ", self.rapid_speed_select , self.set_jog_speed
+            print "self.data.jog_rate:" , self.data.jog_rate
+            print "self.data.jog_angular rate:" , self.data.angular_jog_rate
+            print "self.rapid_speed_low",self.rapid_speed_low
+            print "self.rapid_angular_speed_low",self.rapid_angular_speed_low
+
             if self.rapid_speed_select and not self.set_jog_speed :
-                print "----angular, linear", self.rapid_angular_speed_low,self.rapid_speed_low
-                if self.data.rotary_joints:
-                    self.gscreen.data.angular_jog_adjustment_flag = True
-                    self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_low)
-                    self.gscreen.update_jog_rate_label()
-                    self.gscreen.data.angular_jog_adjustment_flag = False
-                self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)
-                self.gscreen.update_jog_rate_label()
+                self.data.angular_jog_rate = self.rapid_angular_speed_low
+                self.data.jog_rate = self.rapid_speed_low
                 self.rapid_speed_select = 0
+                temp = self.gscreen.data.angular_jog_adjustment_flag
+                self.gscreen.data.angular_jog_adjustment_flag = False
+                self.gscreen.set_jog_rate(absolute = self.rapid_speed_low)	
+                self.gscreen.data.angular_jog_adjustment_flag = True
+                self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_low)
+                self.gscreen.data.angular_jog_adjustment_flag = temp
                 print "nastavuju pomalou"
+
+
             elif not self.rapid_speed_select and not self.set_jog_speed:
-                if  self.data.rotary_joints:
-                    self.gscreen.data.angular_jog_adjustment_flag = True
-                    self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_hi)
-                    self.gscreen.update_jog_rate_label()
-                    self.gscreen.data.angular_jog_adjustment_flag = False
-                self.gscreen.set_jog_rate(absolute = self.rapid_speed_hi)
-                self.gscreen.update_jog_rate_label()
+                self.data.angular_jog_rate = self.rapid_angular_speed_hi
+                self.data.jog_rate = self.rapid_speed_hi
                 self.rapid_speed_select = 1
+                temp = self.gscreen.data.angular_jog_adjustment_flag 
+                self.gscreen.data.angular_jog_adjustment_flag = False
+                self.gscreen.set_jog_rate(absolute = self.rapid_speed_hi)
+                self.gscreen.data.angular_jog_adjustment_flag = True
+                self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_hi)
+                self.gscreen.data.angular_jog_adjustment_flag = temp
                 print "nastavuju rychlou"
         else:
-            print "-----------------uvolneno-------"
             self.gscreen.update_jog_rate_label()
             self.prefs.putpref('JOG_SPEED_LOW', self.rapid_speed_low , int ,"PANEL")
-            self.prefs.putpref('JOG_SPEED_HI', self.rapid_speed_low , int ,"PANEL")
+            self.prefs.putpref('JOG_SPEED_HI', self.rapid_speed_hi , int ,"PANEL")
             self.prefs.putpref('JOG_ANGULAR_SPEED_LOW', self.rapid_angular_speed_low , int ,"PANEL")
             self.prefs.putpref('JOG_ANGULAR_SPEED_HI', self.rapid_angular_speed_hi , int ,"PANEL")
-
             self.set_jog_speed=0
-            self.gscreen.data.angular_jog_adjustment_flag = False
-			
+            print "uvolneno"
+
+						
     def rapid_update (self):
         return self.rapid_speed_select == 1
 		
@@ -576,7 +596,7 @@ class HandlerClass:
         cudlik=r * 8 + c
         print "poradove cislo cudliku" ,cudlik
         try:
-            print "volam funkci ", self.function_list[str(cudlik)] , "_func(", key,")"
+            print "volam funkci ", self.function_list[str(cudlik)], "_func(",key,")"
             eval("self."+self.function_list[str(cudlik)]+"_func("+str(key)+")")
             """eval("self."+self.function_list[str(cudlik)]+"_func()")"""
         except:
