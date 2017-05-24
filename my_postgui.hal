@@ -18,3 +18,13 @@ setp axis.a.jog-vel-mode 1
 #loadusr halscope
 net Apos joint.3.motor-pos-cmd => joint.3.motor-pos-fb
 net nokey matrix_kb_led.0.nokey my_gscreen.nokey
+
+#----vypinani cudlikem
+loadrt timedelay 
+addf timedelay.0 servo-thread 
+setp timedelay.0.on-delay 3
+net shutdown my_gscreen.shutdown timedelay.0.out
+loadusr sim_pin --title shut timedelay.0.in/mode=Hold
+
+
+

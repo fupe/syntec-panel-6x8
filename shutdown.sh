@@ -1,1 +1,1 @@
-echo xxxxxxxxxxxxxxxx
+echo "-----shutdown -h now --------- "
