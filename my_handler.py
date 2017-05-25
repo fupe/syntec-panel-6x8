@@ -66,7 +66,7 @@ class HandlerClass:
             '16':'x1', '17':'x10','18':'x100','19':'feed_minus','20':'feed_reset','21':'feed_plus',
             '24':'z_plus','25':'y_plus','26':'a_plus',
             '32':'x_minus','33':'rapid','34':'x_plus','35':'light','36':'toolchange',
-            '40':'z_minus','41':'y_minus','42':'a_minus'
+            '40':'z_minus','41':'y_minus','42':'a_minus','47':'test'
 			
             }
         self.update_led_list = (
@@ -86,9 +86,27 @@ class HandlerClass:
         self.gscreen.set_jog_rate(absolute = self.rapid_angular_speed_low)
         self.gscreen.data.angular_jog_adjustment_flag = False
 
- 
- 
- 
+    def test_func (self,key):
+        print "testovaci cudlik:"
+        
+    def on_tool_change(self,widget):
+        if self.gscreen.halcomp['change-tool']:
+            print "on tool change:"
+        elif self.data.all_homed:
+            print "on tool change dolu:"
+            print "tool number" , self.gscreen.halcomp['tool-number']
+            self.prefs.putpref('TOOL IN SPINDLE', self.gscreen.halcomp['tool-number'] , int ,"TOOL")  
+
+
+    def homed_func(self,widget):
+        
+        if self.halcomp['homed']:
+            print "-----je nahoumovano-------", self.prefs.getpref('TOOL IN SPINDLE',0, int  ,"TOOL")
+            c.mode(linuxcnc.MODE_MDI)
+            c.wait_complete()
+            tool = self.prefs.getpref('TOOL IN SPINDLE',0, int  ,"TOOL")
+            c.mdi("m61 Q%s" %tool)
+
 			
     def light_func (self,key):
         if key:
@@ -159,6 +177,7 @@ class HandlerClass:
         self.data['jog_scale'] = hal_glib.GPin(self.halcomp.newpin('jog_scale', hal.HAL_FLOAT, hal.HAL_OUT))
         self.data['jog_angular_scale'] = hal_glib.GPin(self.halcomp.newpin('jog_angular_scale', hal.HAL_FLOAT, hal.HAL_OUT))
         self.data['shutdown'] = hal_glib.GPin(self.halcomp.newpin('shutdown', hal.HAL_BIT, hal.HAL_IN))
+        self.data['homed'] = hal_glib.GPin(self.halcomp.newpin('homed', hal.HAL_BIT, hal.HAL_IN))
         self.halcomp['jog_scale']=self.x1_mpg_scale
         self.halcomp['jog_angular_scale']=self.x1_mpg_angular_scale
 
@@ -169,6 +188,8 @@ class HandlerClass:
         self.data['key_panel'].connect('value-changed', self.key_panel_func)
         self.data['shutdown'].connect('value-changed', self.shutdown)
         self.data['nokey'].connect('value-changed', self.nokey_func)
+        self.data['homed'].connect('value-changed', self.homed_func)
+
     
     def initialize_pins(self):
         self.gscreen.initialize_pins()

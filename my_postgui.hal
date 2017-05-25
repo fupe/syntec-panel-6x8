@@ -27,4 +27,10 @@ net shutdown my_gscreen.shutdown timedelay.0.out
 loadusr sim_pin --title shut timedelay.0.in/mode=Hold
 
 
+#--------toolchange--------
+unlinkp iocontrol.0.tool-change
+unlinkp iocontrol.0.tool-changed
+net tool-change iocontrol.0.tool-change gscreen.change-tool iocontrol.0.tool-changed
+net homed halui.joint.0.is-homed  my_gscreen.homed
+net tn iocontrol.0.tool-number gscreen.tool-number
 
